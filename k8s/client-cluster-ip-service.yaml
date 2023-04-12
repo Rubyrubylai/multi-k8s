@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: client-cluster-ip-service
+spec:
+  type: ClusterIP
+  selector:
+    component: web
+  ports:
+    - port: 3000 # 被其他 pod 訪問的 port
+      targetPort: 3000 # 此 service 要訪問的 port

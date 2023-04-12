@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: postgres-cluster-ip-service
+spec:
+  type: ClusterIP
+  selector:
+    component: postgres
+  ports:
+    - port: 5432 # 被其他 pod 訪問的 port
+      targetPort: 5432 # 此 service 要訪問的 port
