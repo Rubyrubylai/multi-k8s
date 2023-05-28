@@ -4,10 +4,35 @@ metadata:
   name: ingress-service
   annotations:
     nginx.ingress.kubernetes.io/rewrite-target: /
+    cert-manager.io/cluster-issuer: 'letsencrypt-prod'
+    nginx.ingress.kubernetes.io/ssl-redirect: 'true' # always use https
 spec:
+  tls:
+    - hosts:
+        - k8s-multi.com
+        - www.k8s-multi.com
+      secretName: k8s-multi.com
   ingressClassName: nginx # 用來處理資源的 Ingress controller 的名字
   rules:
-    - http:
+    - host: k8s-multi.com
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: client-cluster-ip-service
+                port:
+                  number: 3000
+          - path: /api/
+            pathType: Prefix
+            backend:
+              service:
+                name: server-cluster-ip-service
+                port: 
+                  number: 5000
+    - host: www.k8s-multi.com
+      http:
         paths:
           - path: /
             pathType: Prefix
